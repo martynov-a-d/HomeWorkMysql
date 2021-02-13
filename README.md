@@ -1,1 +1,1 @@
-repo for mysql on linux
+mysql, CREATE DATABASE vk, typing and copy/paste command in the terminal 50/50, exit, mysqldump vk_test.sql, cp vk_test.sql ~/Documents/HomeWorkMysql, git status, git add ., git commite -am , git push...TO BE CONTINUE
