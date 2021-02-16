@@ -1,1 +1,2 @@
 mysql, CREATE DATABASE vk, typing and copy/paste command in the terminal 50/50, exit, mysqldump vk_test.sql, cp vk_test.sql ~/Documents/HomeWorkMysql, git status, git add ., git commite -am , git push...TO BE CONTINUE
+dowmload file with data from "http://filldb.info/", thanks, add dump to database vk  ~$ mysql vk < ~/Downloads/fulldbefore.sql , create dump ~$ mysqldump vk > vk_test_data.sql; , copypaste to git ~$ cp vk_test_data.sql ~/Documents/HomeWorkMysql/ ,git add ., git commit -am  '' , git push 
