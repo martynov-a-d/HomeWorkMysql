@@ -54,7 +54,10 @@ CREATE TABLE `communities_users` (
   `community_id` int unsigned NOT NULL COMMENT 'Ссылка на группу',
   `user_id` int unsigned NOT NULL COMMENT 'Ссылка на пользователя',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Время создания строки',
-  PRIMARY KEY (`community_id`,`user_id`) COMMENT 'Составной первичный ключ'
+  PRIMARY KEY (`community_id`,`user_id`) COMMENT 'Составной первичный ключ',
+  KEY `communities_users_user_id_fk` (`user_id`),
+  CONSTRAINT `communities_users_community_id_fk` FOREIGN KEY (`community_id`) REFERENCES `communities` (`id`),
+  CONSTRAINT `communities_users_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Участники групп, связь между пользователями и группами';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -82,7 +85,12 @@ CREATE TABLE `friendship` (
   `confirmed_at` datetime DEFAULT NULL COMMENT 'Время подтверждения приглашения',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Время создания строки',
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Время обновления строки',
-  PRIMARY KEY (`user_id`,`friend_id`) COMMENT 'Составной первичный ключ'
+  PRIMARY KEY (`user_id`,`friend_id`) COMMENT 'Составной первичный ключ',
+  KEY `friendship_friend_id_fk` (`friend_id`),
+  KEY `friendship_status_id_fk` (`friendship_status_id`),
+  CONSTRAINT `friendship_friend_id_fk` FOREIGN KEY (`friend_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `friendship_status_id_fk` FOREIGN KEY (`friendship_status_id`) REFERENCES `friendship_statuses` (`id`),
+  CONSTRAINT `friendship_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Таблица дружбы';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -136,7 +144,11 @@ CREATE TABLE `likes` (
   `target_id` int unsigned NOT NULL,
   `target_type_id` int unsigned NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `likes_target_type_id_fk` (`target_type_id`),
+  KEY `likes_user_id_fk` (`user_id`),
+  CONSTRAINT `likes_target_type_id_fk` FOREIGN KEY (`target_type_id`) REFERENCES `target_types` (`id`),
+  CONSTRAINT `likes_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -167,6 +179,10 @@ CREATE TABLE `media` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Время создания строки',
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Время обновления строки',
   PRIMARY KEY (`id`),
+  KEY `media_media_type_id` (`media_type_id`),
+  KEY `media_user_id_fk` (`user_id`),
+  CONSTRAINT `media_media_type_id` FOREIGN KEY (`media_type_id`) REFERENCES `media_types` (`id`),
+  CONSTRAINT `media_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `media_chk_1` CHECK (json_valid(`metadata`))
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Медиафайлы';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -259,7 +275,11 @@ CREATE TABLE `posts` (
   `is_archived` tinyint(1) DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `posts_user_id_fk` (`user_id`),
+  KEY `posts_community_id_fk` (`community_id`),
+  CONSTRAINT `posts_community_id_fk` FOREIGN KEY (`community_id`) REFERENCES `communities` (`id`),
+  CONSTRAINT `posts_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -368,4 +388,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-02-24 14:38:37
+-- Dump completed on 2021-02-27  7:37:19
